@@ -1,4 +1,4 @@
-import 'package:firebase_authentication/screens/sign_up.dart';
+import 'package:firebase_authentication/screens/register.dart';
 import 'package:flutter/material.dart';
 
 class BackArrowIcon extends StatelessWidget {
@@ -72,7 +72,8 @@ class InputTextField extends StatelessWidget {
 
 class Button extends StatelessWidget {
   final String buttonText;
-  Button({@required this.buttonText});
+  final Function onPressed;
+  Button({@required this.buttonText, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +82,15 @@ class Button extends StatelessWidget {
       height: 50,
       // ignore: deprecated_member_use
       child: RaisedButton(
-          child: Text(
-            buttonText,
-            style: TextStyle(color: Colors.white),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          onPressed: () {}),
+        child: Text(
+          buttonText,
+          style: TextStyle(color: Colors.white),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        onPressed: onPressed,
+      ),
     );
   }
 }
@@ -131,7 +133,7 @@ class _SmallTextUnderButtonState extends State<SmallTextUnderButton> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SignUp(),
+                builder: (context) => Register(),
               ),
             );
           },
