@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_authentication/Providerhelper/providerState.dart';
 import 'package:firebase_authentication/constants/constants.dart';
 import 'package:firebase_authentication/screens/sign_in.dart';
@@ -10,6 +11,23 @@ class Register extends StatefulWidget {
 }
 
 class _Register extends State<Register> {
+  String email;
+  String password;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // void _signUp(String email, String password, BuildContext context) async {
+  //   ProviderState _providerState =
+  //       Provider.of<ProviderState>(context, listen: false);
+  //   try {
+  //     if (await _providerState.signUpUser(email, password)) {
+  //       Navigator.pushReplacement(
+  //           context, MaterialPageRoute(builder: (context) => SignIn()));
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,23 +68,58 @@ class _Register extends State<Register> {
                     ),
                     InputTextField(
                       hintText: 'Name',
+                      obscure: false,
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     InputTextField(
                       hintText: 'Email Address',
+                      obscure: false,
+                      onChanged: (value) {
+                        email = value;
+                      },
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    InputTextField(hintText: 'Password'),
+                    InputTextField(
+                      hintText: 'Password',
+                      obscure: true,
+                      onChanged: (value) {
+                        password = value;
+                      },
+                    ),
                     SizedBox(
                       height: 30,
                     ),
                     Button(
                       buttonText: 'Sign Up',
-                      // onPressed: ,
+                      onPressed: () async {
+                        try {
+                          final newUser =
+                              await _auth.createUserWithEmailAndPassword(
+                                  email: email, password: password);
+                          if (newUser != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignIn(),
+                              ),
+                            );
+                          }
+                        } on Exception catch (e) {
+                          print(e);
+                        }
+                        // // RegisterUser();
+                        // _signUp(email, password, context);
+                      },
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => HomeScreen(),
+                      //   ),
+                      // );
                     ),
                     SizedBox(
                       height: 15,
