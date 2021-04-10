@@ -62,7 +62,7 @@ class _SignUpState extends State<SignUp> {
                       height: 30,
                     ),
                     Button(
-                      buttonText: 'Sign In',
+                      buttonText: 'Sign Up',
                     ),
                     SizedBox(
                       height: 15,
