@@ -4,6 +4,7 @@ import 'package:firebase_authentication/constants/constants.dart';
 import 'package:firebase_authentication/screens/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -34,108 +35,120 @@ class _Register extends State<Register> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 30,
-              ),
-              BackArrowIcon(),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TitleText(
-                      title: 'Hello! \nSignup to \nget started',
-                    ),
-                    // SizedBox(
-                    //   height: 15,
-                    // ),
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(8.0),
-                    //   child: Image(
-                    //     image: AssetImage('images/profile.png'),
-                    //     height: 150.0,
-                    //     width: 100.0,
-                    //   ),
-                    // ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    InputTextField(
-                      hintText: 'Name',
-                      obscure: false,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    InputTextField(
-                      hintText: 'Email Address',
-                      obscure: false,
-                      onChanged: (value) {
-                        email = value;
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    InputTextField(
-                      hintText: 'Password',
-                      obscure: true,
-                      onChanged: (value) {
-                        password = value;
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Button(
-                      buttonText: 'Sign Up',
-                      onPressed: () async {
-                        try {
-                          final newUser =
-                              await _auth.createUserWithEmailAndPassword(
-                                  email: email, password: password);
-                          if (newUser != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignIn(),
-                              ),
-                            );
-                          }
-                        } on Exception catch (e) {
-                          print(e);
-                        }
-                        // // RegisterUser();
-                        // _signUp(email, password, context);
-                      },
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => HomeScreen(),
-                      //   ),
-                      // );
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    SmallTextUnderButton(
-                      leftSideText: 'Already a user ?',
-                      rightSideText: 'sign in',
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    BottomImage(),
-                  ],
+          child: Form(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 30,
                 ),
-              ),
-            ],
+                BackArrowIcon(),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TitleText(
+                        title: 'Hello! \nSignup to \nget started',
+                      ),
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(8.0),
+                      //   child: Image(
+                      //     image: AssetImage('images/profile.png'),
+                      //     height: 150.0,
+                      //     width: 100.0,
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: 35,
+                      ),
+                      InputTextField(
+                        hintText: 'Name',
+                        obscure: false,
+                        validator: Validators.compose([
+                          Validators.required('Email is required'),
+                          Validators.email('Invalid email address'),
+                        ]),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InputTextField(
+                        hintText: 'Email Address',
+                        obscure: false,
+                        onChanged: (value) {
+                          email = value;
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InputTextField(
+                        hintText: 'Password',
+                        validator: Validators.compose([
+                          Validators.required('Password is required'),
+                          Validators.patternString(
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                              'Invalid Password')
+                        ]),
+                        obscure: true,
+                        onChanged: (value) {
+                          password = value;
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Button(
+                        buttonText: 'Sign Up',
+                        onPressed: () async {
+                          try {
+                            final newUser =
+                                await _auth.createUserWithEmailAndPassword(
+                                    email: email, password: password);
+                            if (newUser != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignIn(),
+                                ),
+                              );
+                            }
+                          } on Exception catch (e) {
+                            print(e);
+                          }
+                          // // RegisterUser();
+                          // _signUp(email, password, context);
+                        },
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => HomeScreen(),
+                        //   ),
+                        // );
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      SmallTextUnderButton(
+                        leftSideText: 'Already a user ?',
+                        rightSideText: 'sign in',
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      BottomImage(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
