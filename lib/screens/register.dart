@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_authentication/constants/constants.dart';
+import 'package:firebase_authentication/main.dart';
 import 'package:firebase_authentication/screens/sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:wc_form_validators/wc_form_validators.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -10,22 +12,10 @@ class Register extends StatefulWidget {
 }
 
 class _Register extends State<Register> {
-  String email;
-  String password;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // void _signUp(String email, String password, BuildContext context) async {
-  //   ProviderState _providerState =
-  //       Provider.of<ProviderState>(context, listen: false);
-  //   try {
-  //     if (await _providerState.signUpUser(email, password)) {
-  //       Navigator.pushReplacement(
-  //           context, MaterialPageRoute(builder: (context) => SignIn()));
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController passwordTextEditingController = TextEditingController();
+  bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +23,8 @@ class _Register extends State<Register> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child: Form(
+          child: ModalProgressHUD(
+            inAsyncCall: showSpinner,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -67,69 +58,70 @@ class _Register extends State<Register> {
                         height: 35,
                       ),
                       InputTextField(
+                        controller: nameTextEditingController,
                         hintText: 'Name',
                         obscure: false,
-                        validator: Validators.compose([
-                          Validators.required('Email is required'),
-                          Validators.email('Invalid email address'),
-                        ]),
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       InputTextField(
+                        controller: emailTextEditingController,
                         hintText: 'Email Address',
                         obscure: false,
-                        onChanged: (value) {
-                          email = value;
-                        },
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       InputTextField(
+                        controller: passwordTextEditingController,
                         hintText: 'Password',
-                        validator: Validators.compose([
-                          Validators.required('Password is required'),
-                          Validators.patternString(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
-                              'Invalid Password')
-                        ]),
                         obscure: true,
-                        onChanged: (value) {
-                          password = value;
-                        },
                       ),
                       SizedBox(
                         height: 30,
                       ),
                       Button(
                         buttonText: 'Sign Up',
-                        onPressed: () async {
-                          try {
-                            final newUser =
-                                await _auth.createUserWithEmailAndPassword(
-                                    email: email, password: password);
-                            if (newUser != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignIn(),
-                                ),
-                              );
-                            }
-                          } on Exception catch (e) {
-                            print(e);
+                        onPressed: () {
+                          setState(() {
+                            showSpinner = true;
+                          });
+                          if (nameTextEditingController.text.length < 3) {
+                            displayToastMessage(
+                                'Name must be at least 3 characters', context);
+                          } else if (!emailTextEditingController.text
+                              .contains('@')) {
+                            displayToastMessage(
+                                'Email address is invalid', context);
+                          } else if (passwordTextEditingController.text.length <
+                              6) {
+                            displayToastMessage(
+                                'Name must be at least 6 characters', context);
+                          } else {
+                            registerNewUser(context);
                           }
-                          // // RegisterUser();
-                          // _signUp(email, password, context);
+                          setState(() {
+                            showSpinner = false;
+                          });
                         },
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => HomeScreen(),
-                        //   ),
-                        // );
+                        // async {
+                        //   try {
+                        //     final newUser =
+                        //         await _auth.createUserWithEmailAndPassword(
+                        //             email: email, password: password);
+                        //     if (newUser != null) {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => SignIn(),
+                        //         ),
+                        //       );
+                        //     }
+                        //   } on Exception catch (e) {
+                        //     print(e);
+                        //   }
+                        // },
                       ),
                       SizedBox(
                         height: 15,
@@ -152,4 +144,42 @@ class _Register extends State<Register> {
       ),
     );
   }
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  registerNewUser(BuildContext context) async {
+    final User firebaseUser = (await _firebaseAuth
+            .createUserWithEmailAndPassword(
+                email: emailTextEditingController.text,
+                password: passwordTextEditingController.text)
+            .catchError((errMsg) {
+      displayToastMessage('Error: ' + errMsg.toString(), context);
+    }))
+        .user;
+
+    if (firebaseUser != null) {
+      Map userDataMap = {
+        'name': nameTextEditingController.text.trim(),
+        'email': emailTextEditingController.text.trim(),
+      };
+
+      userRef.child(firebaseUser.uid).set(userDataMap);
+      displayToastMessage(
+          'Congratulations, Your account has been created', context);
+      setState(() {
+        showSpinner = true;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignIn(),
+        ),
+      );
+    } else {
+      displayToastMessage('New user account has not been created', context);
+    }
+  }
+}
+
+displayToastMessage(String message, BuildContext context) {
+  Fluttertoast.showToast(msg: message);
 }
