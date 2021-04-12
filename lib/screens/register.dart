@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/Providerhelper/providerState.dart';
 import 'package:firebase_authentication/constants/constants.dart';
 import 'package:firebase_authentication/screens/sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 class Register extends StatefulWidget {
