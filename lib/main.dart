@@ -1,5 +1,6 @@
 import 'package:firebase_authentication/screens/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -7,6 +8,8 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
+
+DatabaseReference userRef = FirebaseDatabase.instance.reference().child('user');
 
 class MyApp extends StatelessWidget {
   @override
