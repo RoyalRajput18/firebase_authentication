@@ -43,7 +43,9 @@ class InputTextField extends StatelessWidget {
   final String hintText;
   final Function onChanged;
   final bool obscure;
-  InputTextField({@required this.hintText, this.onChanged, this.obscure});
+  final Function validator;
+  InputTextField(
+      {@required this.hintText, this.onChanged, this.obscure, this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,8 @@ class InputTextField extends StatelessWidget {
       borderRadius: BorderRadius.all(
         Radius.circular(10),
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: validator,
         obscureText: obscure,
         decoration: InputDecoration(
           hintText: hintText,
