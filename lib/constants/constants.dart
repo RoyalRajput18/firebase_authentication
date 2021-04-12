@@ -41,11 +41,9 @@ class TitleText extends StatelessWidget {
 
 class InputTextField extends StatelessWidget {
   final String hintText;
-  final Function onChanged;
   final bool obscure;
-  final Function validator;
-  InputTextField(
-      {@required this.hintText, this.onChanged, this.obscure, this.validator});
+  final TextEditingController controller;
+  InputTextField({@required this.hintText, this.obscure, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +52,8 @@ class InputTextField extends StatelessWidget {
       borderRadius: BorderRadius.all(
         Radius.circular(10),
       ),
-      child: TextFormField(
-        validator: validator,
+      child: TextField(
+        controller: controller,
         obscureText: obscure,
         decoration: InputDecoration(
           hintText: hintText,
@@ -71,7 +69,6 @@ class InputTextField extends StatelessWidget {
             ),
           ),
         ),
-        onChanged: onChanged,
       ),
     );
   }
