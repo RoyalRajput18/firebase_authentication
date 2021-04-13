@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/pages/home.dart';
 import 'package:firebase_authentication/pages/setup/constants/constants.dart';
 import 'package:firebase_authentication/main.dart';
 import 'package:firebase_authentication/pages/setup/screens/homeScreen.dart';
@@ -133,7 +132,7 @@ class _SignInState extends State<SignIn> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Home(firebaseUser: firebaseUser),
+          builder: (context) => HomeScreen(),
         ),
       );
     } else {
