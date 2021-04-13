@@ -1,4 +1,4 @@
-import 'package:firebase_authentication/pages/setup/screens/sign_in.dart';
+import 'package:firebase_authentication/screens/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
