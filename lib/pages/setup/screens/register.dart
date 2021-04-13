@@ -84,6 +84,7 @@ class _Register extends State<Register> {
                       Button(
                         buttonText: 'Sign Up',
                         onPressed: () {
+                          return LinearProgressIndicator();
                           setState(() {
                             showSpinner = true;
                           });
