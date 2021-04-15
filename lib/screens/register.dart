@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/main.dart';
 import 'package:firebase_authentication/constants/constants.dart';
 import 'package:firebase_authentication/screens/sign_in_page.dart';
+
 import 'package:firebase_authentication/services/authentication_services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,8 +15,6 @@ class _Register extends State<Register> {
   TextEditingController nameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
-  bool showSpinner = false;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -103,10 +100,13 @@ class _Register extends State<Register> {
                                 password:
                                     passwordTextEditingController.text.trim(),
                               );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignInPage(),
+                            ),
+                          );
                         }
-                        setState(() {
-                          showSpinner = false;
-                        });
                       },
                     ),
                     SizedBox(
@@ -130,41 +130,39 @@ class _Register extends State<Register> {
     );
   }
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  registerNewUser(BuildContext context) async {
-    final User firebaseUser = (await _firebaseAuth
-            .createUserWithEmailAndPassword(
-                email: emailTextEditingController.text,
-                password: passwordTextEditingController.text)
-            .catchError((errMsg) {
-      displayToastMessage('Error: ' + errMsg.toString(), context);
-    }))
-        .user;
+//   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+//   registerNewUser(BuildContext context) async {
+//     final User firebaseUser = (await _firebaseAuth
+//             .createUserWithEmailAndPassword(
+//                 email: emailTextEditingController.text,
+//                 password: passwordTextEditingController.text)
+//             .catchError((errMsg) {
+//       displayToastMessage('Error: ' + errMsg.toString(), context);
+//     }))
+//         .user;
 
-    if (firebaseUser != null) {
-      Map userDataMap = {
-        'name': nameTextEditingController.text.trim(),
-        'email': emailTextEditingController.text.trim(),
-      };
+//     if (firebaseUser != null) {
+//       Map userDataMap = {
+//         'name': nameTextEditingController.text.trim(),
+//         'email': emailTextEditingController.text.trim(),
+//       };
 
-      userRef.child(firebaseUser.uid).set(userDataMap);
-      displayToastMessage(
-          'Congratulations, Your account has been created', context);
-      setState(() {
-        showSpinner = true;
-      });
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SignInPage(),
-        ),
-      );
-    } else {
-      displayToastMessage('New user account has not been created', context);
-    }
-  }
+//       userRef.child(firebaseUser.uid).set(userDataMap);
+//       displayToastMessage(
+//           'Congratulations, Your account has been created', context);
+
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => SignInPage(),
+//         ),
+//       );
+//     } else {
+//       displayToastMessage('New user account has not been created', context);
+//     }
+//   }
 }
 
-displayToastMessage(String message, BuildContext context) {
-  Fluttertoast.showToast(msg: message);
-}
+// displayToastMessage(String message, BuildContext context) {
+//   Fluttertoast.showToast(msg: message);
+// }
