@@ -1,5 +1,5 @@
 import 'package:firebase_authentication/screens/aboutUs.dart';
-import 'package:firebase_authentication/screens/home.dart';
+import 'package:firebase_authentication/screens/homeScreen.dart';
 import 'package:firebase_authentication/screens/profile.dart';
 import 'package:firebase_authentication/screens/schedule.dart';
 import 'package:firebase_authentication/screens/setting.dart';
@@ -24,7 +24,7 @@ class _BottomBarState extends State<BottomBar> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Home(),
+                  builder: (context) => HomeScreen(),
                 ),
               );
             },
