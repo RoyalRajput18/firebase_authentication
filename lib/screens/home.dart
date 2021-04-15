@@ -22,12 +22,6 @@ class Home extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   context.read<AuthenticationService>().signOut();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignInPage(),
-                    ),
-                  );
                 },
                 child: Text("Sign out"),
               ),
