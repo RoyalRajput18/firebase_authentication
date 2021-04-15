@@ -1,5 +1,8 @@
 import 'package:firebase_authentication/components/bottomBar.dart';
+import 'package:firebase_authentication/screens/sign_in_page.dart';
+import 'package:firebase_authentication/services/authentication_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -7,11 +10,28 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: Text('Welcome'),
         ),
         body: Container(
-          child: Center(
-            child: Text('This is home Screen'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: Text('Welcome'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  context.read<AuthenticationService>().signOut();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignInPage(),
+                    ),
+                  );
+                },
+                child: Text("Sign out"),
+              ),
+            ],
           ),
         ),
         bottomNavigationBar: BottomBar(),
