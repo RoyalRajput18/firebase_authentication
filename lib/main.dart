@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/screens/homeScreen.dart';
+import 'package:firebase_authentication/screens/home.dart';
 import 'package:firebase_authentication/screens/sign_in_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,8 +12,6 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
-
-DatabaseReference userRef = FirebaseDatabase.instance.reference().child('user');
 
 class MyApp extends StatelessWidget {
   @override
@@ -43,7 +40,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
-      return HomeScreen();
+      return Home();
     }
     return SignInPage();
   }
